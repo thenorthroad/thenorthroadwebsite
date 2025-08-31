@@ -9,14 +9,15 @@ html, body { height: 100%; margin: 0; }
 body.hero {
  background: 
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-    url("/assets/background.jpg") center/cover no-repeat var(--bg);  
+    url("/assets/background.jpg") bottom/cover no-repeat var(--bg);  
   font-family: var(--font);
   color: var(--text);
   display: flex;
-  align-items: center;
+  align-items: left;
   justify-content: center;
   text-align: center;
   flex-direction: column;
+  padding: 4rem;
 }
 
 .centered {
@@ -25,10 +26,11 @@ body.hero {
   align-items: left;
   gap: 1rem;
   max-width: 90%;
+  height: fit-content;
 }
 
 .logo {
-  max-width: 180px; /* adjust to match your Figma size */
+  max-width: 150px; /* adjust to match your Figma size */
   height: auto;
 }
 
@@ -44,9 +46,12 @@ body.hero {
 }
 
 .divider {
-  margin-top: 1.5rem;
-  width: 100%;
+  margin-bottom: 1.5rem;
+  margin-top: 0rem;
+  width: 100vw;
   height: 1px;
   background: var(--text);
   border: none;
+    translate: 0px -1px 0px;
+
 }
