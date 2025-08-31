@@ -1,86 +1,52 @@
-:root{
-  --bg: #0b0c0f;
-  --panel: #121418;
-  --text: #e8e8ea;
-  --muted: #b3b3ba;
-  --brand: #32bb5b;
-  --accent: #7fffd4;
-  --radius: 16px;
-  --gap: 1rem;
-  --maxw: 1100px;
-  --shadow: 0 10px 30px rgba(0,0,0,.25);
-  color-scheme: dark light;
-}
-
-@media (prefers-color-scheme: light) {
-  :root{
-    --bg: #ffffff;
-    --panel: #f6f7fb;
-    --text: #111216;
-    --muted: #4b4f5a;
-    --brand: #2b59ff;
-    --accent: #0db37d;
-    --shadow: 0 10px 30px rgba(0,0,0,.08);
-  }
+:root {
+  --bg: #171717;
+  --text: #ffffff;
+  --font: 'Roboto', system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
-html, body { height: 100%; }
-body{
-  margin:0;
-  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+html, body { height: 100%; margin: 0; }
+body.hero {
+ background: 
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("/assets/background.jpg") center/cover no-repeat var(--bg);  
+  font-family: var(--font);
   color: var(--text);
-  background: radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--brand), transparent 70%), transparent), var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
 }
 
-.container{
-  width: min(100% - 2rem, var(--maxw));
-  margin-inline: auto;
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 1rem;
+  max-width: 90%;
 }
 
-.site-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding: 1rem 0;
+.logo {
+  max-width: 180px; /* adjust to match your Figma size */
+  height: auto;
 }
 
-.brand { display:flex; align-items:center; gap:.6rem; text-decoration:none; color:inherit; }
-.brand-mark { font-size:1.3rem; color: var(--brand); }
-.brand-name { font-weight:700; letter-spacing:.3px; }
-
-.nav { list-style:none; display:flex; gap:1rem; margin:0; padding:0; }
-.nav a { color: inherit; text-decoration: none; opacity:.85; }
-.nav a:hover, .nav a:focus { opacity:1; text-decoration:underline; text-underline-offset: 4px; }
-
-.hero{ padding: 8rem 0 3rem; text-align: left; }
-.hero h1{ font-size: clamp(2rem, 4vw + 1rem, 3.5rem); margin:0 0 .5rem; letter-spacing:.2px; }
-.lead{ font-size: 1.125rem; color: var(--muted); max-width: 60ch; }
-
-.cta-row{ display:flex; gap:.8rem; margin-top:1.4rem; flex-wrap:wrap; }
-.button{
-  display:inline-block; border:none; text-decoration:none;
-  background: linear-gradient(180deg, var(--brand), color-mix(in oklab, var(--brand), black 12%));
-  color:white; padding:.8rem 1rem; border-radius: var(--radius);
-  box-shadow: var(--shadow); font-weight:600; cursor:pointer;
-}
-.button.ghost{
-  background: transparent; color: inherit; border:1px solid color-mix(in oklab, var(--text), transparent 75%);
+.tagline {
+  font-weight: 200;
+  font-size: clamp(0.6rem, 1.5vw, 1rem);
+  letter-spacing: -0.03em;
+  max-width: 250px;
+  text-align: left;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--text);
 }
 
-.card-grid{
-  display:grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin: 3rem 0 2rem;
-}
-.card{
-  background: var(--panel); border-radius: var(--radius); padding: 1.2rem; box-shadow: var(--shadow);
-}
-.placeholder{ margin: 3rem 0 2rem; }
-.placeholder p{ color: var(--muted); }
-
-.contact-list{ list-style:none; margin:0; padding:0; display:grid; gap:.4rem; }
-.contact-list a{ color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-
-.site-footer{ padding: 3rem 0; color: var(--muted); border-top:1px solid color-mix(in oklab, var(--text), transparent 85%); margin-top: 3rem; }
-
-@media (max-width: 640px){
-  .hero{ padding-top: 5rem; }
+.divider {
+  margin-top: 1.5rem;
+  width: 100%;
+  height: 1px;
+  background: var(--text);
+  border: none;
 }
