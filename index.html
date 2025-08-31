@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YOUR BRAND — CGI • UI/UX • Apps</title>
+  <meta name="description" content="High-quality CGI, thoughtful UI/UX, and pragmatic app development. Let’s turn ideas into polished, performant products." />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="YOUR BRAND — CGI • UI/UX • Apps">
+  <meta property="og:description" content="High-quality CGI, thoughtful UI/UX, and pragmatic app development.">
+  <meta property="og:image" content="https://YOUR-DOMAIN/ assets/og-image.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/assets/styles.css" as="style" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+
+  <!-- Prefer dark if user prefers it -->
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- JSON-LD (Organization) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"YOUR BRAND",
+    "url":"https://YOUR-DOMAIN/",
+    "logo":"https://YOUR-DOMAIN/assets/favicon.svg",
+    "sameAs":[]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header container">
+    <a class="brand" href="/">
+      <!-- Simple text brand for now; replace with an SVG logo later -->
+      <span class="brand-mark">◎</span>
+      <span class="brand-name">YOUR BRAND</span>
+    </a>
+    <nav aria-label="primary">
+      <ul class="nav">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#work">Work (soon)</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero" aria-label="Intro">
+      <h1>CGI • UI/UX • App services</h1>
+      <p class="lead">I build crisp visuals, intuitive interfaces, and lean apps. A full site is coming—here’s how to reach me meanwhile.</p>
+      <div class="cta-row">
+        <a class="button" href="#contact">Get in touch</a>
+        <button class="button ghost" id="notifyBtn">Notify me when live</button>
+      </div>
+    </section>
+
+    <section id="services" class="card-grid" aria-labelledby="services-h">
+      <h2 id="services-h">What I do</h2>
+      <article class="card">
+        <h3>CGI</h3>
+        <p>High-fidelity stills & motion for product, architecture, and marketing.</p>
+      </article>
+      <article class="card">
+        <h3>UI/UX</h3>
+        <p>Research, wireframes, and polished design systems that scale.</p>
+      </article>
+      <article class="card">
+        <h3>Apps</h3>
+        <p>Web apps with performance, accessibility, and maintainability in mind.</p>
+      </article>
+    </section>
+
+    <section id="work" class="placeholder">
+      <h2>Selected work</h2>
+      <p>Case studies and reels coming soon.</p>
+    </section>
+
+    <section id="contact" class="contact card" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <ul class="contact-list">
+        <li>Email: <a href="mailto:hello@YOUR-DOMAIN">hello@YOUR-DOMAIN</a></li>
+        <li>LinkedIn: <a rel="me" href="https://www.linkedin.com/in/YOUR-HANDLE/">@YOUR-HANDLE</a></li>
+        <li>Instagram/ArtStation/Behance: <a href="https://YOUR-SOCIAL/">@YOUR-SOCIAL</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <small>© <span id="year"></span> YOUR BRAND · All rights reserved.</small>
+  </footer>
+
+  <script src="/assets/script.js" defer></script>
+</body>
+</html>
