@@ -2,8 +2,8 @@
   "brand": "The North Road",
   "tagline": "Digital Content and Customer Experience Services",
   "socials": [
-    {"name":"Instagram","href":"https://instagram.com/YOURHANDLE","icon":"/assets/icons/instagram.svg"},
+    {"name":"Instagram","href":"https://instagram.com/thenorthroaduk","icon":"/assets/icons/insta.svg"},
     {"name":"LinkedIn","href":"https://linkedin.com/in/YOURHANDLE","icon":"/assets/icons/linkedin.svg"},
-    {"name":"Email","href":"mailto:hello@thenorthroad.studio","icon":"/assets/icons/mail.svg"}
+    {"name":"Email","href":"mailto:thenorthroaduk@gmail.com","icon":"/assets/icons/email.svg"}
   ]
 }

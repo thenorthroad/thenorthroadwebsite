@@ -1,7 +1,47 @@
 :root {
   --bg: #171717;
   --text: #ffffff;
-  --font: 'Roboto', system-ui, sans-serif;
+  --font: 'Montserrat', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+  letter-spacing: -0.05em;
+
+}
+
+footer {
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+}
+
+.logo {
+  /* THE NORTH ROAD */
+
+width: 352px;
+height: 50px;
+
+font-family: 'Montserrat';
+font-style: normal;
+text-transform: uppercase;
+font-weight: 300;
+font-size: 2rem;
+line-height: 50px;
+/* identical to box height, or 125% */
+text-align: left;
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
 }
 
 * { box-sizing: border-box; }
@@ -31,10 +71,6 @@ body.hero {
   height: fit-content;
 }
 
-.logo {
-  max-width: 150px; /* adjust to match your Figma size */
-  height: auto;
-}
 
 .content {
   display: flex;

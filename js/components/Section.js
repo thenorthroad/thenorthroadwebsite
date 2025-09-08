@@ -1,7 +1,7 @@
 // Section.js (optional cards)
-import { html, el } from '../lib/dom.js';
+import { html, element } from '../lib/dom.js';
 export default function Section(title, cards) {
-  return el(html`
+  return element(html`
     <section class="cards">
       ${title ? `<h2>${title}</h2>` : ''}
       ${cards.map(c => `

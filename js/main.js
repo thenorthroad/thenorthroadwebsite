@@ -15,10 +15,10 @@ async function loadJSON(url){ const r = await fetch(url); return r.json(); }
   app.replaceChildren(
     Header(site.brand),
     Hero(site.tagline),
-    Socials(site.socials),
-    Section('What I do', services),
-    Footer(site.brand),
+    // Socials(site.socials),    // top socials (optional)
+    // Section('What I do', services),
+    Footer(site.brand, site.socials) // footer with socials
   );
 
-  app.hidden = false; // reveal once ready
+  app.hidden = false;
 })();

@@ -2,7 +2,7 @@
 export const html = (strings, ...vals) =>
   strings.reduce((out, s, i) => out + s + (vals[i] ?? ''), '');
 
-export function el(markup) {
+export function element(markup) {
   const tpl = document.createElement('template');
   tpl.innerHTML = markup.trim();
   return tpl.content.firstElementChild;
