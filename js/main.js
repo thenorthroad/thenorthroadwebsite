@@ -1,24 +1,27 @@
+// main.js
+import pageRegistry from './pages/index.js';
 import Header from './components/Header.js';
-import Hero from './components/Hero.js';
-import Socials from './components/Socials.js';
-import Section from './components/Section.js';
 import Footer from './components/Footer.js';
-
-const app = document.getElementById('app');
 
 async function loadJSON(url){ const r = await fetch(url); return r.json(); }
 
 (async function init() {
-  const site = await loadJSON('/js/data/site.json');
-  const services = await loadJSON('/js/data/services.json');
+  const headerHost = document.getElementById('site-header');
+  const app = document.getElementById('app');
+  const footerHost = document.getElementById('site-footer');
 
-  app.replaceChildren(
-    Header(site.brand),
-    Hero(site.tagline),
-    // Socials(site.socials),    // top socials (optional)
-    // Section('What I do', services),
-    Footer(site.brand, site.socials) // footer with socials
-  );
+  const [site, services] = await Promise.all([
+    loadJSON('/js/data/site.json'),
+    loadJSON('/js/data/services.json'),
+  ]);
 
+  // render persistent header + footer
+  headerHost.replaceChildren(Header(site));
+  footerHost.replaceChildren(Footer(site.brand, site.socials));
+
+  // render page sections in between
+  const context = { site, services };
+  const pages = pageRegistry(context).map(make => make(context));
+  app.replaceChildren(...pages);
   app.hidden = false;
 })();
