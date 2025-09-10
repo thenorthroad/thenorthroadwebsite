@@ -4,8 +4,6 @@
   --font: 'Montserrat', system-ui, sans-serif;
 }
 
-
-
 body {
   margin: 0;
   font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -17,9 +15,11 @@ body {
 }
 
 footer {
-  display: none;
+  display: block;
   flex-direction:row;
   justify-content: space-between;
+  position: fixed;
+  bottom: 10px;
 }
 
 #app {
@@ -33,7 +33,7 @@ footer {
   linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
   url("/assets/background.jpg") center/cover no-repeat var(--bg);  
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   max-width: 1440px;
   align-items: left;
@@ -42,6 +42,18 @@ footer {
   flex-direction: column;
   padding: 4rem;
   margin: auto;
+}
+
+.page.intro {
+    padding: 0;
+    align-items: center;
+
+}
+
+.imageViewer {
+  background: 
+  linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+  url("/assets/background.jpg") center/cover no-repeat var(--bg);   
 }
 
 .page.services{
@@ -56,7 +68,7 @@ header {
 h1 {
   /* THE NORTH ROAD */
 
-width: 352px;
+width: auto;
 height: 50px;
 
 font-family: 'Montserrat';
@@ -82,6 +94,12 @@ html, body {
     scroll-snap-type: y mandatory;
 }
 
+.landingimage {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background:#171717
+}
 
 
 
@@ -131,4 +149,23 @@ html, body {
   border: none;
     translate: 0px -1px 0px;
 
+}
+
+.layout1 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: transparent;
+  padding: 10px;
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+
+}
+
+.layout1 > div {
+  background-color: transparent;
+  border: 1px solid rgb(28, 214, 93);
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
 }

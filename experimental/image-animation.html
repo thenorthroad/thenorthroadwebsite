@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bucket Reveal – Clean Reveal & Hide (No Grid)</title>
+<style>
+  body { margin:0; font-family: system-ui, sans-serif; background:#111; color:#eee; }
+  header { padding: 16px 0; }
+  .wrap { width:100%; max-width:1100px; margin:0 auto; padding:0 16px; box-sizing:border-box; }
+
+  .controls {
+    display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); align-items:end;
+  }
+  .controls label { font-size:12px; opacity:.7; display:block; margin-bottom:4px; }
+  .controls input, .controls select, .controls button {
+    width:100%; padding:10px; border-radius:8px; border:1px solid #444; background:#222; color:#eee; box-sizing:border-box;
+  }
+  .controls .row { display:flex; gap:12px; }
+  .controls .row > * { flex: 1; }
+  .controls button.primary { background:#6b7cff; border-color:#6b7cff; color:#fff; }
+
+  .stage { padding:16px 0 24px; }
+  .img-box {
+    position:relative; width:100%; max-width:100%;
+    aspect-ratio:16/9; background:#000; border-radius:20px; overflow:hidden;
+  }
+  @media (max-width: 900px) { .img-box { aspect-ratio:4/3; } }
+  @media (max-width: 520px) { .img-box { aspect-ratio:1/1; border-radius:16px; } }
+
+  .img-box > img { width:100%; height:100%; object-fit:cover; display:block; opacity:0; transition:opacity .5s ease; }
+
+  @keyframes brFadeInSlice {
+    0%   { opacity:0; transform:scale(1.02); filter:blur(.5px); }
+    60%  { opacity:1; transform:scale(1);    filter:blur(0); }
+    100% { opacity:1; transform:scale(1);    filter:blur(0); }
+  }
+  @keyframes brFadeInBlack { 0% {opacity:0;} 100% {opacity:1;} }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <h1 style="margin:0 0 12px;">Bucket Reveal – Clean Reveal & Hide</h1>
+  <div class="controls">
+    <div>
+      <label>Image URL</label>
+      <input id="imgUrl" type="url" placeholder="https://example.com/photo.jpg" />
+    </div>
+    <div>
+      <label>Or Local File</label>
+      <input id="imgFile" type="file" accept="image/*" />
+    </div>
+    <div>
+      <label>Order</label>
+      <select id="order">
+        <option value="random" selected>random</option>
+        <option value="row">row</option>
+        <option value="column">column</option>
+        <option value="diagonal">diagonal</option>
+        <option value="spiral">spiral</option>
+      </select>
+    </div>
+    <div>
+      <label>Tile (px)</label>
+      <input id="tile" type="number" value="56" min="8" />
+    </div>
+    <div class="row">
+      <button id="revealBtn" class="primary">Reveal</button>
+      <button id="hideBtn">Hide</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap stage">
+  <div id="host" class="img-box"
+       data-order="random" data-target-tile="56"
+       data-stagger="20" data-duration="420">
+    <img id="theImg" alt="Preview"
+         src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&w=1600&q=80" />
+  </div>
+</main>
+
+<script>
+(() => {
+  class BucketReveal {
+    constructor(el, opts = {}) {
+      this.el = el;
+      this.defaults = {
+        order: 'random',
+        targetTile: 56,
+        stagger: 22,
+        duration: 420,
+        handoffMs: 500
+      };
+      this.opts = { ...this.defaults, ...opts };
+      this.overlay = null;
+      this._ro = new ResizeObserver(() => { if (this.overlay) this._rebuild(this._mode); });
+      this._ro.observe(this.el);
+    }
+
+    reveal(options={}) { Object.assign(this.opts, options); this._mode='reveal'; this._rebuild('reveal'); }
+    hide(options={})   { Object.assign(this.opts, options); this._mode='hide';   this._rebuild('hide'); }
+    destroy(){ this._ro.disconnect(); this.overlay?.remove(); this.overlay=null; }
+
+    _syncFromDataset(){
+      const d = this.el.dataset || {};
+      this.opts.order      = d.order      ?? this.opts.order;
+      this.opts.targetTile = Number(d.targetTile ?? this.opts.targetTile);
+      this.opts.stagger    = Number(d.stagger    ?? this.opts.stagger);
+      this.opts.duration   = Number(d.duration   ?? this.opts.duration);
+    }
+    _imgInfo(){
+      const imgEl = this.el.querySelector('img');
+      const src   = imgEl?.currentSrc || imgEl?.src;
+      const iw    = imgEl?.naturalWidth || 0;
+      const ih    = imgEl?.naturalHeight || 0;
+      return { imgEl, src, iw, ih };
+    }
+    _sequence(rows, cols, kind){
+      const total = rows*cols;
+      const arr = Array.from({length: total}, (_,i)=>i);
+      const pos = (i)=>({r:Math.floor(i/cols), c:i%cols});
+      if (kind==='row')     return arr.sort((a,b)=> pos(a).r-pos(b).r || pos(a).c-pos(b).c);
+      if (kind==='column')  return arr.sort((a,b)=> pos(a).c-pos(b).c || pos(a).r-pos(b).r);
+      if (kind==='diagonal')return arr.sort((a,b)=> (pos(a).r+pos(a).c)-(pos(b).r+pos(b).c));
+      if (kind==='spiral'){
+        const out=[]; let t=0,l=0,b=rows-1,r=cols-1;
+        while(t<=b && l<=r){
+          for(let c=l;c<=r;c++) out.push(t*cols+c);
+          for(let rr=t+1;rr<=b;rr++) out.push(rr*cols+r);
+          if(t<b) for(let c=r-1;c>=l;c--) out.push(b*cols+c);
+          if(l<r) for(let rr=b-1;rr>t;rr--) out.push(rr*cols+l);
+          t++; l++; b--; r--;
+        }
+        return out;
+      }
+      for (let i=total-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+      return arr;
+    }
+
+    _rebuild(mode){
+      this._syncFromDataset();
+      if (this.overlay) { this.overlay.remove(); this.overlay=null; }
+
+      const { imgEl, src, iw, ih } = this._imgInfo();
+      if (!src) return;
+      imgEl && (imgEl.style.transition = `opacity ${this.opts.handoffMs}ms ease`);
+      if (mode==='reveal') imgEl && (imgEl.style.opacity = '0');
+      if (mode==='hide')   imgEl && (imgEl.style.opacity = '1');
+
+      const rect = this.el.getBoundingClientRect();
+      const W = Math.max(1, Math.floor(rect.width));
+      const H = Math.max(1, Math.floor(rect.height));
+      const target = Math.max(8, Math.floor(this.opts.targetTile));
+      let cols = Math.max(1, Math.round(W / target));
+      let rows = Math.max(1, Math.round(cols * (H / W)));
+      const tileW = W / cols, tileH = H / rows;
+
+      let renderW=W, renderH=H, offsetX=0, offsetY=0;
+      if (iw>0 && ih>0){
+        const scale = Math.max(W/iw, H/ih);
+        renderW = iw*scale; renderH = ih*scale;
+        offsetX = (W-renderW)/2; offsetY = (H-renderH)/2;
+      }
+      const bgSize = `${renderW}px ${renderH}px`;
+
+      const ov = document.createElement('div');
+      Object.assign(ov.style, { position:'absolute', inset:'0', pointerEvents:'none', overflow:'hidden' });
+
+      if (mode==='reveal'){
+        const base = document.createElement('div');
+        Object.assign(base.style, { position:'absolute', inset:'0', background:'#000', zIndex:1 });
+        ov.appendChild(base);
+      }
+
+      const grid = document.createElement('div');
+      Object.assign(grid.style, {
+        position:'absolute', inset:'0', display:'grid',
+        gridTemplateColumns:`repeat(${cols}, 1fr)`,
+        gridTemplateRows:`repeat(${rows}, 1fr)`,
+        zIndex:2
+      });
+      for (let i=0;i<rows*cols;i++) grid.appendChild(document.createElement('div'));
+
+      const seq = this._sequence(rows, cols, this.opts.order);
+      let pending = rows*cols;
+      const afterReveal = () => { imgEl && (imgEl.style.opacity = '1'); setTimeout(() => { ov.remove(); this.overlay=null; }, this.opts.handoffMs); };
+      const afterHide   = () => { imgEl && (imgEl.style.opacity = '0'); setTimeout(() => { ov.remove(); this.overlay=null; }, this.opts.handoffMs); };
+      const handleEnd = () => { if (--pending===0) (mode==='reveal' ? afterReveal() : afterHide()); };
+
+      for (let i=0;i<rows*cols;i++){
+        const idx = seq[i];
+        const r = Math.floor(idx/cols);
+        const c = idx % cols;
+        const x = c*tileW, y = r*tileH;
+
+        const tile = document.createElement('div');
+        if (mode==='reveal'){
+          Object.assign(tile.style, {
+            opacity:'0',
+            backgroundImage:`url(${src})`,
+            backgroundSize:bgSize,
+            backgroundPosition:`${offsetX - x}px ${offsetY - y}px`,
+            backgroundRepeat:'no-repeat',
+            willChange:'opacity, transform',
+            animation:`brFadeInSlice ${this.opts.duration}ms ease-out ${i*this.opts.stagger}ms forwards`
+          });
+        } else {
+          Object.assign(tile.style, {
+            background:'#000',
+            opacity:'0',
+            willChange:'opacity',
+            animation:`brFadeInBlack ${this.opts.duration}ms ease-out ${i*this.opts.stagger}ms forwards`
+          });
+        }
+        tile.addEventListener('animationend', handleEnd, { once:true });
+        grid.replaceChild(tile, grid.children[idx]);
+      }
+
+      ov.appendChild(grid);
+      this.el.appendChild(ov);
+      this.overlay = ov;
+    }
+  }
+  window.BucketReveal = BucketReveal;
+})();
+</script>
+
+<script>
+(function(){
+  const host   = document.getElementById('host');
+  const imgEl  = document.getElementById('theImg');
+  const urlInp = document.getElementById('imgUrl');
+  const fileIn = document.getElementById('imgFile');
+  const order  = document.getElementById('order');
+  const tile   = document.getElementById('tile');
+  const revealBtn = document.getElementById('revealBtn');
+  const hideBtn   = document.getElementById('hideBtn');
+
+  const br = new window.BucketReveal(host);
+
+  const setImageUrl = (src) => new Promise((res, rej) => { imgEl.onload=()=>res(); imgEl.onerror=e=>rej(e); imgEl.src=src; });
+
+  urlInp.addEventListener('change', async () => { const v=urlInp.value.trim(); if(!v) return; try{ await setImageUrl(v); br.reveal(); }catch(e){ alert('Could not load image.'); } });
+  fileIn.addEventListener('change', async () => { const f=fileIn.files?.[0]; if(!f) return; const u=URL.createObjectURL(f); try{ await setImageUrl(u); br.reveal(); }catch(e){ alert('Could not load selected file.'); } });
+
+  order.addEventListener('change', () => { host.dataset.order = order.value; });
+  tile .addEventListener('change', () => { host.dataset.targetTile = tile.value || '56'; });
+
+  revealBtn.addEventListener('click', () => br.reveal());
+  hideBtn  .addEventListener('click', () => br.hide());
+
+  if (imgEl.complete) br.reveal(); else imgEl.addEventListener('load', () => br.reveal(), { once:true });
+})();
+</script>
+
+</body>
+</html>

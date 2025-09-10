@@ -10,9 +10,11 @@ async function loadJSON(url){ const r = await fetch(url); return r.json(); }
   const app = document.getElementById('app');
   const footerHost = document.getElementById('site-footer');
 
-  const [site, services] = await Promise.all([
+  const [site, services, undercon] = await Promise.all([
     loadJSON('/js/data/site.json'),
     loadJSON('/js/data/services.json'),
+    loadJSON('/js/data/underConstruction.json'),
+
   ]);
 
   // render persistent header + footer
@@ -20,7 +22,7 @@ async function loadJSON(url){ const r = await fetch(url); return r.json(); }
   footerHost.replaceChildren(Footer(site.brand, site.socials));
 
   // render page sections in between
-  const context = { site, services };
+  const context = { site, services, undercon };
   const pages = pageRegistry(context).map(make => make(context));
   app.replaceChildren(...pages);
   app.hidden = false;

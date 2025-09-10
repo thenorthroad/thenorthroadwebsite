@@ -2,8 +2,9 @@ import { html, element } from '../lib/dom.js';
 
 export default function Home(site) {
   return element(html`
-    <div id="home" class="page home">
-    <h1>WE MAKE INSPIRATIONAL CONTENT FOR WEB and PRINT</h1>
-    </div>
+    <div id="intro" class="page intro">
+    <h1>The North Road</h1>
+    <hr class="divider" />
   `);
 }
+
